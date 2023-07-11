@@ -18,10 +18,8 @@ jobs:
 
       - name: Build and Upload artifacts
         run: |
-          msbuild /p:Configuration=Release /p:Platform=x86
-          msbuild /p:Configuration=Release /p:Platform=x64
-          echo "::set-output name=x86_artifact_path::Release/Injector.exe"
-          echo "::set-output name=x64_artifact_path::x64/Release/Injector.exe"
+          msbuild /p:Configuration=Release /p:Platform=x86 /p:OutDir=bin/x86/ /p:AssemblyName=Injector
+          msbuild /p:Configuration=Release /p:Platform=x64 /p:OutDir=bin/x64/ /p:AssemblyName=Injector64
         shell: cmd
 
       - name: Create Release
@@ -34,23 +32,10 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-
-      - name: Upload x86 Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ${{ github.workspace }}/Release/Injector.exe
-          asset_name: Injector.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload x64 Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ${{ github.workspace }}/x64/Release/Injector.exe
-          asset_name: Injector64.exe
-          asset_content_type: application/octet-stream
+          files: |
+            ${{ github.workspace }}/bin/x64/Injector64.exe
+            ${{ github.workspace }}/bin/x86/Injector.exe
