@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   build_and_release:
@@ -20,22 +21,23 @@ jobs:
         run: |
           msbuild /p:Configuration=Release /p:Platform=x86 /p:OutDir=bin/x86/ /p:AssemblyName=Injector
           msbuild /p:Configuration=Release /p:Platform=x64 /p:OutDir=bin/x64/ /p:AssemblyName=Injector64
+          tree /F
         shell: cmd
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+#       - name: Create Release
+#         id: create_release
+#         uses: actions/create-release@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+#         with:
+#           tag_name: ${{ github.ref }}
+#           release_name: Release ${{ github.ref }}
+#           draft: false
+#           prerelease: false
           
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            Release/bin/x64/Injector64.exe
-            Release/bin/x86/Injector.exe
+#       - name: Release
+#         uses: softprops/action-gh-release@v1
+#         with:
+#           files: |
+#             Release/bin/x64/Injector64.exe
+#             Release/bin/x86/Injector.exe
