@@ -20,10 +20,8 @@ jobs:
         run: |
           msbuild /p:Configuration=Release /p:Platform=x86
           msbuild /p:Configuration=Release /p:Platform=x64
-          cp DllInjector/Release/x86/Injector.exe x86_Injector.exe
-          cp DllInjector/x64/Release/Injector.exe x64_Injector.exe
-          echo "::set-output name=x86_artifact_path::x86_Injector.exe"
-          echo "::set-output name=x64_artifact_path::x64_Injector.exe"
+          echo "::set-output name=x86_artifact_path::Release/Injector.exe"
+          echo "::set-output name=x64_artifact_path::x64/Release/Injector.exe"
         shell: cmd
 
       - name: Create Release
@@ -43,7 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ${{ github.workspace }}/x86_Injector.exe
+          asset_path: ${{ github.workspace }}/Release/Injector.exe
           asset_name: Injector.exe
           asset_content_type: application/octet-stream
 
@@ -53,6 +51,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ${{ github.workspace }}/x64_Injector.exe
+          asset_path: ${{ github.workspace }}/x64/Release/Injector.exe
           asset_name: Injector64.exe
           asset_content_type: application/octet-stream
