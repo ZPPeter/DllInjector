@@ -26,13 +26,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Injector.exe
-          path: Injector/bin/Release/x86/Injector.exe
+          path: DllInjector/bin/Release/x86/Injector.exe
 
       - name: Upload x64 artifact
         uses: actions/upload-artifact@v2
         with:
           name: Injector64.exe
-          path: Injector/bin/Release/x64/Injector.exe
+          path: DllInjector/bin/Release/x64/Injector.exe
 
   release:
     needs: build
