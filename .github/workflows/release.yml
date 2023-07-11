@@ -17,7 +17,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
-      - name: Build and Upload artifacts
+      - name: Build
         run: |
           msbuild /p:Configuration=Release /p:Platform=x86 /p:OutDir=bin/x86/ /p:AssemblyName=Injector
           msbuild /p:Configuration=Release /p:Platform=x64 /p:OutDir=bin/x64/ /p:AssemblyName=Injector64
