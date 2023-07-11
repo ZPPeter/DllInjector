@@ -37,5 +37,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            bin/x64/Injector64.exe
-            bin/x86/Injector.exe
+            Release/bin/x64/Injector64.exe
+            Release/bin/x86/Injector.exe
