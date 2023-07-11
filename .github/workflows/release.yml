@@ -1,0 +1,81 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Build x86 executable
+        run: msbuild /p:Configuration=Release /p:Platform=x86
+
+      - name: Build x64 executable
+        run: msbuild /p:Configuration=Release /p:Platform=x64
+
+      - name: Upload x86 artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: myprogram-x86
+          path: Injector/bin/Release/x86/Injector.exe
+
+      - name: Upload x64 artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: myprogram-x64
+          path: Injector/bin/Release/x64/Injector.exe
+
+  release:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+      - name: Download x86 artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: myprogram-x86
+
+      - name: Download x64 artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: myprogram-x64
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload x86 Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./myprogram-x86.exe
+          asset_name: myprogram-x86.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload x64 Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./myprogram-x64.exe
+          asset_name: myprogram-x64.exe
+          asset_content_type: application/octet-stream
