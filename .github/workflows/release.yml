@@ -37,5 +37,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ${{ github.workspace }}\bin\x64\Injector64.exe
-            ${{ github.workspace }}\bin\x86\Injector.exe
+            bin/x64/Injector64.exe
+            bin/x86/Injector.exe
