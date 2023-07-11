@@ -19,8 +19,8 @@ jobs:
 
       - name: Build
         run: |
-          msbuild /p:Configuration=Release /p:Platform=x86 /p:OutDir=bin/x86/ /p:AssemblyName=Injector
-          msbuild /p:Configuration=Release /p:Platform=x64 /p:OutDir=bin/x64/ /p:AssemblyName=Injector64
+          msbuild /p:Configuration=Release /p:Platform=x86 /p:OutDir=bin/x86/ /p:AssemblyName=DllInjector
+          msbuild /p:Configuration=Release /p:Platform=x64 /p:OutDir=bin/x64/ /p:AssemblyName=DllInjector64
         shell: cmd
 
       - name: Create Release
@@ -38,5 +38,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            Injector/bin/x64/Injector64.exe
-            Injector/bin/x86/Injector.exe
+            DllInjector/bin/x64/DllInjector64.exe
+            DllInjector/bin/x86/DllInjector.exe
