@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  build:
+  build_and_release:
     runs-on: windows-latest
 
     steps:
@@ -16,38 +16,15 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
-      - name: Build x86 executable
-        run: msbuild /p:Configuration=Release /p:Platform=x86
-
-      - name: Build x64 executable
-        run: msbuild /p:Configuration=Release /p:Platform=x64
-
-      - name: Upload x86 artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Injector.exe
-          path: DllInjector/bin/Release/x86/Injector.exe
-
-      - name: Upload x64 artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: Injector64.exe
-          path: DllInjector/bin/Release/x64/Injector.exe
-
-  release:
-    needs: build
-    runs-on: windows-latest
-
-    steps:
-      - name: Download x86 artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: Injector.exe
-
-      - name: Download x64 artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: Injector64.exe
+      - name: Build and Upload artifacts
+        run: |
+          msbuild /p:Configuration=Release /p:Platform=x86
+          msbuild /p:Configuration=Release /p:Platform=x64
+          cp DllInjector/Release/x86/Injector.exe x86_Injector.exe
+          cp DllInjector/x64/Release/Injector.exe x64_Injector.exe
+          echo "::set-output name=x86_artifact_path::x86_Injector.exe"
+          echo "::set-output name=x64_artifact_path::x64_Injector.exe"
+        shell: cmd
 
       - name: Create Release
         id: create_release
@@ -66,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./Injector.exe
+          asset_path: ${{ github.workspace }}/x86_Injector.exe
           asset_name: Injector.exe
           asset_content_type: application/octet-stream
 
@@ -76,6 +53,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./Injector64.exe
+          asset_path: ${{ github.workspace }}/x64_Injector.exe
           asset_name: Injector64.exe
           asset_content_type: application/octet-stream
