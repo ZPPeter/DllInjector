@@ -25,13 +25,13 @@ jobs:
       - name: Upload x86 artifact
         uses: actions/upload-artifact@v2
         with:
-          name: myprogram-x86
+          name: Injector.exe
           path: Injector/bin/Release/x86/Injector.exe
 
       - name: Upload x64 artifact
         uses: actions/upload-artifact@v2
         with:
-          name: myprogram-x64
+          name: Injector64.exe
           path: Injector/bin/Release/x64/Injector.exe
 
   release:
@@ -42,12 +42,12 @@ jobs:
       - name: Download x86 artifact
         uses: actions/download-artifact@v2
         with:
-          name: myprogram-x86
+          name: Injector.exe
 
       - name: Download x64 artifact
         uses: actions/download-artifact@v2
         with:
-          name: myprogram-x64
+          name: Injector64.exe
 
       - name: Create Release
         id: create_release
@@ -66,8 +66,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./myprogram-x86.exe
-          asset_name: myprogram-x86.exe
+          asset_path: ./Injector.exe
+          asset_name: Injector.exe
           asset_content_type: application/octet-stream
 
       - name: Upload x64 Release Asset
@@ -76,6 +76,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./myprogram-x64.exe
-          asset_name: myprogram-x64.exe
+          asset_path: ./Injector64.exe
+          asset_name: Injector64.exe
           asset_content_type: application/octet-stream
