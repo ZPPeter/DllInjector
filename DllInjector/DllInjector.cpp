@@ -75,11 +75,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    #ifdef _WIN64
-        FARPROC hLoadLibrary = GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryW");
-    #else
-        FARPROC hLoadLibrary = GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
-    #endif
+    FARPROC hLoadLibrary = GetProcAddress(GetModuleHandle("Kernel32.dll"), "LoadLibraryA");
 
     if (!hLoadLibrary) {
         std::cout << "Cannot get LoadLibrary address. Error: " << GetLastError() << "\n";
